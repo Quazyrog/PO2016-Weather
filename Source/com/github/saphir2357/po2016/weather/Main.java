@@ -1,11 +1,12 @@
 package com.github.saphir2357.po2016.weather;
 
+import com.github.saphir2357.po2016.weather.ui.MainWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 
 public class Main extends Application {
-    private MainWindowControler mainWindow = new MainWindowControler();
+    private MainWindow mainWindow = new MainWindow();
 
     public static void main(String[] args) {
         launch(args);
