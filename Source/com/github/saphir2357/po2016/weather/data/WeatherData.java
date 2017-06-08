@@ -51,6 +51,11 @@ public class WeatherData {
     }
 
 
+    public double celcius() throws NoDataException {
+        return (celciusMin() + celciusMax()) / 2.0;
+    }
+
+
     public double hPaPressure() throws NoDataException {
         if (hPaPressure < 0)
             throw new NoDataException("pressure");
@@ -100,6 +105,8 @@ public class WeatherData {
         windSpeed = -1;
         windDegree = -1;
         aqIndex = -1;
+        pm25 = -1;
+        pm10 = -1;
     }
 
 

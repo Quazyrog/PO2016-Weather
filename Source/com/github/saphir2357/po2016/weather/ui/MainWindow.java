@@ -1,33 +1,52 @@
 package com.github.saphir2357.po2016.weather.ui;
 
+import com.github.saphir2357.po2016.weather.data.NoDataException;
+import com.github.saphir2357.po2016.weather.data.WeatherData;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
 
+
 public class MainWindow {
+    private static final String NOT_AVAILABLE_TEXT = "NA";
+    private static final String CELCIUS = "°C";
+
     private static final Font HUGE_FONT = new Font(72);
     private static final Font NORMAL_FONT = new Font(22);
     private static final Font SMALL_FONT = new Font(14);
 
+    private static final Image WIND_ROSE_IMAGE = new Image("Rose.png");
+    private static final Image WIND_ARROW_IMAGE = new Image("Arrow.png");
+
     private GridPane mainPane = new GridPane();
     private Scene scene;
 
-    private ImageView weatherIcon = new ImageView("SadSun.png");
+    private ImageView weatherIcon = new ImageView();
     private Label temperatureLabel = new Label();
     private ImageView windArrow = new ImageView();
     private Label windLabel = new Label();
     private Label humidityLabel = new Label();
+    private Label pressureLabel = new Label();
+    private Label aqiLabel = new Label();
+    private Label pm25Label = new Label();
+    private Label pm10Label = new Label();
 
-    
-    public MainWindow() {
+    private WeatherData dataSource;
+
+
+    public MainWindow(WeatherData dataSource) {
         setupScene();
+        this.dataSource = dataSource;
+        refresh();
     }
 
 
@@ -37,14 +56,17 @@ public class MainWindow {
         ColumnConstraints cc = new ColumnConstraints();
         cc.setHalignment(HPos.CENTER);
         cc.setPercentWidth(33);
+        RowConstraints rc = new RowConstraints();
+        rc.setValignment(VPos.TOP);
         mainPane.getColumnConstraints().addAll(cc, cc, cc);
+        mainPane.getRowConstraints().addAll(rc, rc, rc);
 
         addLocationLabel(0);
         addTemperatureAndImage(1);
         addWindCell(0, 2);
-
-        humidityLabel.setFont(NORMAL_FONT);
-        mainPane.add(humidityLabel, 1, 2);
+        addHumidityCell(1, 2);
+        addPressureCell(2, 2);
+        addAQRow(3);
 
         StackPane mainLayoutWrapper;
         mainLayoutWrapper = new StackPane(mainPane);
@@ -69,9 +91,10 @@ public class MainWindow {
         temperatureLabel.setFont(HUGE_FONT);
     }
 
+
     private void addWindCell(int gridX, int gridY) {
-        windArrow.setFitWidth(36);
-        windArrow.setFitHeight(36);
+        windArrow.setFitWidth(28);
+        windArrow.setFitHeight(28);
         windArrow.setRotate(90);
         windLabel.setFont(NORMAL_FONT);
 
@@ -82,6 +105,29 @@ public class MainWindow {
 
         addLabeledCell(gridX, gridY, "Wind", windBox);
     }
+
+
+    private void addHumidityCell(int gridX, int gridY) {
+        humidityLabel.setFont(NORMAL_FONT);
+        addLabeledCell(gridX, gridY, "Humidity", humidityLabel);
+    }
+
+
+    private void addPressureCell(int gridX, int gridY) {
+        pressureLabel.setFont(NORMAL_FONT);
+        addLabeledCell(gridX, gridY, "Pressure", pressureLabel);
+    }
+
+
+    private void addAQRow(int gridY) {
+        aqiLabel.setFont(NORMAL_FONT);
+        addLabeledCell(0, gridY, "Air Quality Index", aqiLabel);
+        pm25Label.setFont(NORMAL_FONT);
+        addLabeledCell(1, gridY, "PM2.5 Particles", pm25Label);
+        pm10Label.setFont(NORMAL_FONT);
+        addLabeledCell(2, gridY, "PM10 Particles", pm10Label);
+    }
+
 
     private void addLabeledCell(int gridX, int gridY, String label, Node content) {
         Label lbl = new Label(label);
@@ -94,5 +140,59 @@ public class MainWindow {
 
     public Scene getScene() {
         return scene;
+    }
+
+
+    public void refresh() {
+        // ROW 1
+        weatherIcon.setImage(new Image(dataSource.weatherImageName()));
+
+        try {
+            temperatureLabel.setText(dataSource.celcius() + CELCIUS);
+        } catch (NoDataException e) {
+            temperatureLabel.setText(NOT_AVAILABLE_TEXT);
+        }
+
+        // ROW 2
+        try {
+            windLabel.setText(dataSource.windSpeedKmh() + " km/h");
+            windArrow.setImage(WIND_ARROW_IMAGE);
+            windArrow.setRotate(dataSource.windDirectionDegree());
+        } catch (NoDataException e) {
+            windLabel.setText(NOT_AVAILABLE_TEXT);
+            windArrow.setRotate(0);
+            windArrow.setImage(WIND_ROSE_IMAGE);
+        }
+
+        try {
+            humidityLabel.setText(dataSource.humidityPercent() + "%");
+        } catch (NoDataException e) {
+            humidityLabel.setText(NOT_AVAILABLE_TEXT);
+        }
+
+        try {
+            pressureLabel.setText(dataSource.hPaPressure() + " hPa");
+        } catch (NoDataException e) {
+            pressureLabel.setText(NOT_AVAILABLE_TEXT);
+        }
+
+        //ROW 3
+        try {
+            aqiLabel.setText(Double.toString(dataSource.airQualityIndex()));
+        } catch (NoDataException e) {
+            aqiLabel.setText(NOT_AVAILABLE_TEXT);
+        }
+
+        try {
+            pm25Label.setText(Double.toString(dataSource.pm25()));
+        } catch (NoDataException e) {
+            pm25Label.setText(NOT_AVAILABLE_TEXT);
+        }
+
+        try {
+            pm10Label.setText(Double.toString(dataSource.pm10()));
+        } catch (NoDataException e) {
+            pm10Label.setText(NOT_AVAILABLE_TEXT);
+        }
     }
 }
