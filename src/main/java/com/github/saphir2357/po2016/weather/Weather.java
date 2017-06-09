@@ -6,7 +6,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 
-public class Main extends Application {
+public class Weather extends Application {
     private WeatherData weatherData = new WeatherData();
     private MainWindow mainWindow = new MainWindow(weatherData);
 
