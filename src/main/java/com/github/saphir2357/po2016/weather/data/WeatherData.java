@@ -11,6 +11,8 @@ public class WeatherData {
     private double aqIndex;
     private double pm25;
     private double pm10;
+    private double clouds;
+    private double rain;
 
 
     protected static double kelvinToCelcius(double kelvin){
@@ -91,6 +93,20 @@ public class WeatherData {
     }
 
 
+    public double rainVolume3h() throws NoDataException {
+        if (rain < 0)
+            throw new NoDataException("rain volume in 3h");
+        return rain;
+    }
+
+
+    public double cloudinessPercent() throws  NoDataException {
+        if (clouds < 0)
+            throw new NoDataException("cloudiness percent");
+        return clouds;
+    }
+
+
     public String weatherImageName() {
         return "SadSun.png";
     }
@@ -104,6 +120,8 @@ public class WeatherData {
         humidity = -1;
         windSpeed = -1;
         windDegree = -1;
+        clouds = -1;
+        rain = -1;
         aqIndex = -1;
         pm25 = -1;
         pm10 = -1;
@@ -120,6 +138,10 @@ public class WeatherData {
                 ? update.get(WeatherUpdateDataKey.PRESSURE) : hPaPressure;
         humidity = update.hasData(WeatherUpdateDataKey.HUMIDITY)
                 ? update.get(WeatherUpdateDataKey.HUMIDITY) : humidity;
+        clouds = update.hasData(WeatherUpdateDataKey.CLOUDINESS_PERCENT)
+                ? update.get(WeatherUpdateDataKey.CLOUDINESS_PERCENT) : clouds;
+        rain = update.hasData(WeatherUpdateDataKey.RAINFALL_VOLUME)
+                ? update.get(WeatherUpdateDataKey.RAINFALL_VOLUME) : rain;
         aqIndex = update.hasData(WeatherUpdateDataKey.AIR_QUALITY_INDEX)
                 ? update.get(WeatherUpdateDataKey.AIR_QUALITY_INDEX) : aqIndex;
         pm25 = update.hasData(WeatherUpdateDataKey.PM2_5)

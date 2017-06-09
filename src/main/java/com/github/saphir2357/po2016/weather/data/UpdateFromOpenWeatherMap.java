@@ -14,6 +14,8 @@ public class UpdateFromOpenWeatherMap implements IWeatherUpdate {
     private JSONObject weather = null;
     private JSONObject main = null;
     private JSONObject wind = null;
+    private JSONObject rain = null;
+    private JSONObject clouds = null;
     private static final String ENDPOINT =
             "http://samples.openweathermap.org/data/2.5/weather?id=2172797&appid=b1b15e88fa797225412429c1c50c122a1";
 
@@ -24,8 +26,15 @@ public class UpdateFromOpenWeatherMap implements IWeatherUpdate {
             URL url = new URL(ENDPOINT);
             JSONObject response = new JSONObject(new JSONTokener(url.openStream()));
             weather = response.getJSONArray("weather").getJSONObject(0);
-            main = response.getJSONObject("main");
-            wind = response.getJSONObject("wind");
+
+            if (response.has("main"))
+                main = response.getJSONObject("main");
+            if (response.has("wind"))
+                wind = response.getJSONObject("wind");
+            if (response.has("rain"))
+                rain = response.getJSONObject("rain");
+            if (response.has("clouds"))
+                clouds = response.getJSONObject("clouds");
         } catch (JSONException e) {
             Logger.getGlobal().log(Level.SEVERE, "JSON parse error", e);
             throw new IOException("JSON parse error");
@@ -38,7 +47,7 @@ public class UpdateFromOpenWeatherMap implements IWeatherUpdate {
         try {
             get(data);
             return true;
-        } catch (JSONException | IllegalArgumentException e) {
+        } catch (JSONException | NullPointerException | IllegalArgumentException e) {
             return false;
         }
     }
@@ -64,6 +73,10 @@ public class UpdateFromOpenWeatherMap implements IWeatherUpdate {
                     return wind.getDouble("speed");
                 case WIND_DEGREE:
                     return wind.getDouble("deg");
+                case RAINFALL_VOLUME:
+                    return rain.getDouble("3h");
+                case CLOUDINESS_PERCENT:
+                    return clouds.getDouble("all");
                 default:
                     throw new IllegalArgumentException("No such response in this object");
             }

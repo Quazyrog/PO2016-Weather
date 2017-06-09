@@ -39,6 +39,8 @@ public class MainWindow {
     private Label aqiLabel = new Label();
     private Label pm25Label = new Label();
     private Label pm10Label = new Label();
+    private Label rainLabel = new Label();
+    private Label cloudinessLabel = new Label();
 
     private WeatherData dataSource;
 
@@ -63,10 +65,12 @@ public class MainWindow {
 
         addLocationLabel(0);
         addTemperatureAndImage(1);
-        addWindCell(0, 2);
-        addHumidityCell(1, 2);
+        addWindCells(0, 2);
         addPressureCell(2, 2);
-        addAQRow(3);
+        addHumidityCell(0, 3);
+        addRainVolumeCell(1, 3);
+        addCloudinessCell(2, 3);
+        addAQRow(4);
 
         StackPane mainLayoutWrapper;
         mainLayoutWrapper = new StackPane(mainPane);
@@ -92,18 +96,13 @@ public class MainWindow {
     }
 
 
-    private void addWindCell(int gridX, int gridY) {
+    private void addWindCells(int gridX, int gridY) {
         windArrow.setFitWidth(28);
         windArrow.setFitHeight(28);
         windArrow.setRotate(90);
         windLabel.setFont(NORMAL_FONT);
-
-        HBox windBox = new HBox();
-        windBox.setAlignment(Pos.CENTER);
-        windBox.setSpacing(10);
-        windBox.getChildren().addAll(windLabel, windArrow);
-
-        addLabeledCell(gridX, gridY, "Wind", windBox);
+        addLabeledCell(gridX, gridY, "Wind speed", windLabel);
+        addLabeledCell(gridX + 1, gridY, "Wind direction", windArrow);
     }
 
 
@@ -129,6 +128,18 @@ public class MainWindow {
     }
 
 
+    private void addRainVolumeCell(int gridX, int gridY) {
+        rainLabel.setFont(NORMAL_FONT);
+        addLabeledCell(gridX, gridY, "Rain Volumne in 3h", rainLabel);
+    }
+
+
+    private void addCloudinessCell(int gridX, int gridY) {
+        cloudinessLabel.setFont(NORMAL_FONT);
+        addLabeledCell(gridX, gridY, "Cloudiness", cloudinessLabel);
+    }
+
+
     private void addLabeledCell(int gridX, int gridY, String label, Node content) {
         Label lbl = new Label(label);
         lbl.setFont(SMALL_FONT);
@@ -144,7 +155,6 @@ public class MainWindow {
 
 
     public void refresh() {
-        // ROW 1
         weatherIcon.setImage(new Image(dataSource.weatherImageName()));
 
         try {
@@ -153,7 +163,6 @@ public class MainWindow {
             temperatureLabel.setText(NOT_AVAILABLE_TEXT);
         }
 
-        // ROW 2
         try {
             windLabel.setText(dataSource.windSpeedKmh() + " km/h");
             windArrow.setImage(WIND_ARROW_IMAGE);
@@ -176,7 +185,6 @@ public class MainWindow {
             pressureLabel.setText(NOT_AVAILABLE_TEXT);
         }
 
-        //ROW 3
         try {
             aqiLabel.setText(Double.toString(dataSource.airQualityIndex()));
         } catch (NoDataException e) {
@@ -193,6 +201,18 @@ public class MainWindow {
             pm10Label.setText(Double.toString(dataSource.pm10()));
         } catch (NoDataException e) {
             pm10Label.setText(NOT_AVAILABLE_TEXT);
+        }
+
+        try {
+            rainLabel.setText(Double.toString(dataSource.rainVolume3h()) + "mm");
+        } catch (NoDataException e) {
+            rainLabel.setText(NOT_AVAILABLE_TEXT);
+        }
+
+        try {
+            cloudinessLabel.setText(Double.toString(dataSource.cloudinessPercent()) + "%");
+        } catch (NoDataException e) {
+            cloudinessLabel.setText(NOT_AVAILABLE_TEXT);
         }
     }
 }
