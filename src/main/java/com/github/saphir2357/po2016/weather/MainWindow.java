@@ -151,11 +151,11 @@ public class MainWindow {
         ToggleGroup sourceToggleGroup = new ToggleGroup();
         ComboBox<UpdateSource> weatherSourceCombo = new ComboBox<>();
         weatherSourceCombo.getItems().addAll(UpdateSource.values());
-        weatherSourceCombo.getSelectionModel().select(application.getWeatherSource());
+        weatherSourceCombo.getSelectionModel().select(application.getConfig().getUpdateSource());
         weatherSourceCombo.valueProperty().addListener(new ChangeListener<UpdateSource>() {
             @Override
             public void changed(ObservableValue<? extends UpdateSource> observableValue, UpdateSource oldValue, UpdateSource newValue) {
-                application.setWeatherSource(newValue);
+                application.getConfig().setUpdateSource(newValue);
             }
         });
         HBox sourceSwitchBox = new HBox(new Label("Data source"), weatherSourceCombo);

@@ -66,7 +66,12 @@ public class UpdateFromMeteoWaw implements IWeatherUpdate {
         if (!matcher.find())
             throw new IllegalArgumentException("no " + data + " in this update");
 
-        double result = Double.parseDouble(matcher.group(1).replace(",", "."));
+        double result;
+        try {
+            result = Double.parseDouble(matcher.group(1).replace(",", "."));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("no " + data + " in this update");
+        }
         if (data != WeatherUpdateDataKey.TEMPERATURE)
             return result;
         return WeatherData.celciusToKelvin(result);

@@ -16,14 +16,14 @@ public class UpdateFromOpenWeatherMap implements IWeatherUpdate {
     private JSONObject wind = null;
     private JSONObject rain = null;
     private JSONObject clouds = null;
-    private static final String ENDPOINT =
-            "http://samples.openweathermap.org/data/2.5/weather?id=2172797&appid=b1b15e88fa797225412429c1c50c122a1";
+    private static final String SAMPLE_ENDPOINT = "http://samples.openweathermap.org/data/2.5/weather";
+    private static final String ENDPOINT = "http://api.openweathermap.org/data/2.5/weather";
 
 
-    public UpdateFromOpenWeatherMap() throws IOException {
+    public UpdateFromOpenWeatherMap(boolean sample, int cityID, String apiKey) throws IOException {
         try {
             Logger.getGlobal().info("Downloading update from OpenWeatherMap");
-            URL url = new URL(ENDPOINT);
+            URL url = new URL((sample ? SAMPLE_ENDPOINT : ENDPOINT) + "?id=" + cityID + "&appid=" + apiKey);
             JSONObject response = new JSONObject(new JSONTokener(url.openStream()));
             weather = response.getJSONArray("weather").getJSONObject(0);
 

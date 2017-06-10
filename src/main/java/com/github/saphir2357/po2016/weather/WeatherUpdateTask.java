@@ -9,24 +9,24 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class WeatherUpdateTask extends Task<IWeatherUpdate> {
-    UpdateSource source;
+    Config config;
 
     public WeatherUpdateTask(Weather application) {
         setOnSucceeded(application::handleUpdate);
-        source = application.getWeatherSource();
+        config = application.getConfig();
     }
 
     @Override
     protected IWeatherUpdate call() throws Exception {
-        Logger.getGlobal().info("Started weather network update task (source: " + source + ")");
+        Logger.getGlobal().info("Started weather network update task (source: " + config.getUpdateSource() + ")");
         IWeatherUpdate result = null;
         try {
-            switch (source) {
+            switch (config.getUpdateSource()) {
                 case METEO_WAW_PL:
                     result = new UpdateFromMeteoWaw();
                     break;
                 case OPEN_WEATHER_MAP:
-                    result = new UpdateFromOpenWeatherMap();
+                    result = new UpdateFromOpenWeatherMap(config.isOwmUseSample(), config.getOwmCityID(), config.getOwmAPIKey());
                     break;
             }
             Logger.getGlobal().info("Completed weather network update task");

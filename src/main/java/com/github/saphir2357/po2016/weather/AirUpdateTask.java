@@ -13,9 +13,9 @@ public class AirUpdateTask extends Task<IWeatherUpdate> {
     int stationID;
 
 
-    public AirUpdateTask(Weather application, int stationID) {
+    public AirUpdateTask(Weather application) {
         setOnSucceeded(application::handleUpdate);
-        this.stationID = stationID;
+        stationID = application.getConfig().getGiosStationID();
     }
 
 
