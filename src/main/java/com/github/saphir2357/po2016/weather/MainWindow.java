@@ -153,6 +153,7 @@ public class MainWindow {
         Button updateButton = new Button();
         updateButton.setText("Update");
         updateButton.setOnMouseClicked(e -> application.updateAll());
+        updateButton.setTooltip(new Tooltip("Update all meters"));
 
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(5.0);
@@ -175,12 +176,8 @@ public class MainWindow {
 
         weatherSourceCombo.getItems().addAll(UpdateSource.values());
         weatherSourceCombo.getSelectionModel().select(application.getConfig().getUpdateSource());
-        weatherSourceCombo.valueProperty().addListener(new ChangeListener<UpdateSource>() {
-            @Override
-            public void changed(ObservableValue<? extends UpdateSource> observableValue, UpdateSource oldValue, UpdateSource newValue) {
-                application.getConfig().setUpdateSource(newValue);
-            }
-        });
+        weatherSourceCombo.valueProperty().addListener(
+                (observableValue, oldValue, newValue) -> application.getConfig().setUpdateSource(newValue));
 
         return weatherSourceCombo;
     }
@@ -203,12 +200,8 @@ public class MainWindow {
             return weatherSourceCombo;
         }
 
-        weatherSourceCombo.valueProperty().addListener(new ChangeListener<GIOSStation>() {
-            @Override
-            public void changed(ObservableValue<? extends GIOSStation> observableValue, GIOSStation giosStation, GIOSStation t1) {
-                application.getConfig().setGiosStationID(t1.getId());
-            }
-        });
+        weatherSourceCombo.valueProperty().addListener(
+                (observableValue, giosStation, t1) -> application.getConfig().setGiosStationID(t1.getId()));
 
         return weatherSourceCombo;
     }

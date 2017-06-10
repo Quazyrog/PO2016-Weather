@@ -58,7 +58,7 @@ public class GIOSStation {
 
     @Override
     public String toString() {
-        return "[" + id + "]" + getName();
+        return "[" + id + "] " + getName();
     }
 
 
