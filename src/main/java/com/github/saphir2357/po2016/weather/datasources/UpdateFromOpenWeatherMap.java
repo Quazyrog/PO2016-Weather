@@ -1,4 +1,4 @@
-package com.github.saphir2357.po2016.weather.data;
+package com.github.saphir2357.po2016.weather.datasources;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package com.github.saphir2357.po2016.weather.data;
+package com.github.saphir2357.po2016.weather.datasources;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package com.github.saphir2357.po2016.weather;
 
-import com.github.saphir2357.po2016.weather.data.IWeatherUpdate;
-import com.github.saphir2357.po2016.weather.data.UpdateFromGIOS;
+import com.github.saphir2357.po2016.weather.datasources.IWeatherUpdate;
+import com.github.saphir2357.po2016.weather.datasources.UpdateFromGIOS;
 import javafx.concurrent.Task;
 
 import java.io.IOException;

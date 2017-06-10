@@ -1,10 +1,9 @@
 package com.github.saphir2357.po2016.weather;
 
-import com.github.saphir2357.po2016.weather.data.NoDataException;
-import com.github.saphir2357.po2016.weather.data.WeatherData;
+import com.github.saphir2357.po2016.weather.datasources.NoDataException;
+import com.github.saphir2357.po2016.weather.datasources.WeatherData;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,8 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import java.awt.event.MouseEvent;
 
 
 public class MainWindow {

@@ -1,6 +1,6 @@
 package com.github.saphir2357.po2016.weather;
 
-import com.github.saphir2357.po2016.weather.data.*;
+import com.github.saphir2357.po2016.weather.datasources.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;

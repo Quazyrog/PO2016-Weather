@@ -1,6 +1,4 @@
-package com.github.saphir2357.po2016.weather.data;
-
-import java.util.regex.Matcher;
+package com.github.saphir2357.po2016.weather.datasources;
 
 public class WeatherData {
     private int precisionPower = 10;
