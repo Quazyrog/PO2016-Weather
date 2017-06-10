@@ -3,6 +3,7 @@ package com.github.saphir2357.po2016.weather;
 import com.github.saphir2357.po2016.weather.datasources.GIOSStation;
 import com.github.saphir2357.po2016.weather.datasources.NoDataException;
 import com.github.saphir2357.po2016.weather.datasources.WeatherData;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
@@ -50,6 +51,8 @@ public class MainWindow {
     private Label rainLabel = new Label();
     private Label cloudinessLabel = new Label();
 
+    private ComboBox<GIOSStation> giosStationComboBox = new ComboBox<>();
+
     HBox statusBar;
     private Label statusBarLabel = new Label("Kore wa STATUSBAR desu!");
 
@@ -86,6 +89,7 @@ public class MainWindow {
 
     public void refresh() {
         WeatherData dataSource = application.getWeatherData();
+        application.getExecutor().submit(this::fillGIOSStationList);
 
         weatherIcon.setImage(dataSource.weatherImageName());
 
@@ -184,26 +188,31 @@ public class MainWindow {
 
 
     private Node buildGIOSStationSwitch() {
-        ComboBox<GIOSStation> weatherSourceCombo = new ComboBox<>();
-        weatherSourceCombo.setTooltip(new Tooltip("Change GIOS station"));
-        List<GIOSStation> list;
+        giosStationComboBox.setTooltip(new Tooltip("Change GIOS station"));
+
+        application.getExecutor().submit(this::fillGIOSStationList);
+        giosStationComboBox.valueProperty().addListener(
+                (observableValue, giosStation, t1) -> application.getConfig().setGiosStationID(t1.getId()));
+
+        return giosStationComboBox;
+    }
+
+
+    private void fillGIOSStationList() {
+        if (giosStationComboBox.getItems().size() > 0)
+            return;
 
         try {
+            List<GIOSStation> list;
             list = GIOSStation.stationsInCity("Warszawa");
-            weatherSourceCombo.getItems().addAll(list);
+            giosStationComboBox.getItems().addAll(list);
             GIOSStation selectedStation = list.stream()
                     .filter(s -> s.getId() == application.getConfig().getGiosStationID())
                     .findFirst().get();
-            weatherSourceCombo.getSelectionModel().select(selectedStation);
+            Platform.runLater(() -> giosStationComboBox.getSelectionModel().select(selectedStation));
         } catch (IOException | NullPointerException e) {
             Logger.getGlobal().warning("Cannot fill stations list");
-            return weatherSourceCombo;
         }
-
-        weatherSourceCombo.valueProperty().addListener(
-                (observableValue, giosStation, t1) -> application.getConfig().setGiosStationID(t1.getId()));
-
-        return weatherSourceCombo;
     }
 
 

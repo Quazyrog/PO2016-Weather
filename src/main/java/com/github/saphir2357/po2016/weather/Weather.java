@@ -15,9 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,9 +50,10 @@ public class Weather extends Application {
 
         mainWindow = new MainWindow(this);
         Logger.getGlobal().info("Starting application");
-        primaryStage.setScene(mainWindow.getScene());
         primaryStage.setTitle("Weather (Warsaw/Poland)");
         primaryStage.getIcons().add(new Image("Icon.png"));
+        primaryStage.setMinWidth(600);
+        primaryStage.setScene(mainWindow.getScene());
         primaryStage.show();
 
         updateAll();
@@ -116,5 +115,10 @@ public class Weather extends Application {
 
     public Config getConfig() {
         return config;
+    }
+
+
+    public ExecutorService getExecutor() {
+        return executor;
     }
 }
