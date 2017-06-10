@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -53,6 +54,7 @@ public class Weather extends Application {
         Logger.getGlobal().info("Starting application");
         primaryStage.setScene(mainWindow.getScene());
         primaryStage.setTitle("Weather (Warsaw/Poland)");
+        primaryStage.getIcons().add(new Image("Icon.png"));
         primaryStage.show();
 
         updateAll();

@@ -1,6 +1,19 @@
 package com.github.saphir2357.po2016.weather.datasources;
 
+import javafx.scene.image.Image;
+
 public class WeatherData {
+    private static final Image BROKEN_CLOUDS_IMAGE = new Image("BrokenClouds.png");
+    private static final Image FOG_IMAGE = new Image("Fog.png");
+    private static final Image HEAVY_RAIN_IMAGE = new Image("HeavyRain.png");
+    private static final Image LIGHT_RAIN_IMAGE = new Image("LightRain.png");
+    private static final Image SCATTERED_CLOUDS_IMAGE = new Image("ScatteredClouds.png");
+    private static final Image SNOW_IMAGE = new Image("Snow.png");
+    private static final Image SUN_AND_CLOUDS_IMAGE = new Image("SunAndCloud.png");
+    private static final Image SUNNY_IMAGE = new Image("Sunny.png");
+    private static final Image THUNDERSTORM_IMAGE = new Image("Thunderstorm.png");
+    private static final Image NO_DATA_IMAGE = new Image("SadSun.png");
+
     private int precisionPower = 10;
     private int weatherCode;
     private double kelvinTemperatureMin;
@@ -113,8 +126,33 @@ public class WeatherData {
     }
 
 
-    public String weatherImageName() {
-        return "SadSun.png";
+    public Image weatherImageName() {
+        int code100 = weatherCode / 100;
+        switch (code100) {
+            case 2:
+                return THUNDERSTORM_IMAGE;
+            case 3:
+                return LIGHT_RAIN_IMAGE;
+            case 5:
+                if (weatherCode < 511)
+                    return LIGHT_RAIN_IMAGE;
+                if (weatherCode == 511)
+                    return SNOW_IMAGE;
+                return HEAVY_RAIN_IMAGE;
+            case 6:
+                return SNOW_IMAGE;
+            case 7:
+                return FOG_IMAGE;
+            case 8:
+                if (weatherCode == 800)
+                    return SUNNY_IMAGE;
+                if (weatherCode == 801)
+                    return SUN_AND_CLOUDS_IMAGE;
+                if (weatherCode == 802)
+                    return SCATTERED_CLOUDS_IMAGE;
+                return BROKEN_CLOUDS_IMAGE;
+        }
+        return NO_DATA_IMAGE;
     }
 
 

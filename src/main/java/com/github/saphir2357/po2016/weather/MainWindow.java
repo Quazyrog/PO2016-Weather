@@ -82,7 +82,7 @@ public class MainWindow {
     public void refresh() {
         WeatherData dataSource = application.getWeatherData();
 
-        weatherIcon.setImage(new Image(dataSource.weatherImageName()));
+        weatherIcon.setImage(dataSource.weatherImageName());
 
         try {
             temperatureLabel.setText(dataSource.celcius() + CELCIUS);
