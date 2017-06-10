@@ -71,4 +71,10 @@ public class UpdateFromMeteoWaw implements IWeatherUpdate {
             return result;
         return WeatherData.celciusToKelvin(result);
     }
+
+
+    @Override
+    public String description() {
+        return "Weather";
+    }
 }

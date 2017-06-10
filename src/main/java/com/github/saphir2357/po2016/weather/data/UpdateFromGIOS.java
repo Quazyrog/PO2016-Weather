@@ -86,4 +86,10 @@ public class UpdateFromGIOS implements IWeatherUpdate {
             throw new IllegalArgumentException("Has no data");
         }
     }
+
+
+    @Override
+    public String description() {
+        return "Air";
+    }
 }

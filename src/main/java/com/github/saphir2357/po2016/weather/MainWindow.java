@@ -1,12 +1,13 @@
 package com.github.saphir2357.po2016.weather;
 
 import com.github.saphir2357.po2016.weather.data.NoDataException;
-import com.github.saphir2357.po2016.weather.data.UpdateFromMeteoWaw;
 import com.github.saphir2357.po2016.weather.data.WeatherData;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -17,6 +18,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.awt.event.MouseEvent;
 
 
 public class MainWindow {
@@ -49,17 +51,18 @@ public class MainWindow {
     HBox statusBar;
     private Label statusBarLabel = new Label("Kore wa STATUSBAR desu!");
 
-    private WeatherData dataSource;
+    private Weather application;
 
 
-    public MainWindow(WeatherData dataSource) {
+    public MainWindow(Weather application) {
+        this.application = application;
+
         BorderPane borderPane = new BorderPane();
         addMenuBar(borderPane);
         addCentralWidget(borderPane);
         addStatusBar(borderPane);
-        scene = new Scene(borderPane);
 
-        this.dataSource = dataSource;
+        scene = new Scene(borderPane);
         refresh();
     }
 
@@ -80,6 +83,8 @@ public class MainWindow {
 
 
     public void refresh() {
+        WeatherData dataSource = application.getWeatherData();
+
         weatherIcon.setImage(new Image(dataSource.weatherImageName()));
 
         try {
@@ -144,25 +149,29 @@ public class MainWindow {
 
     private void addMenuBar(BorderPane layout) {
         ToggleGroup sourceToggleGroup = new ToggleGroup();
-        ComboBox<String> weatherSourceCombo = new ComboBox<>();
-        weatherSourceCombo.getItems().addAll("OpenWeatherMap", "http://www.meteo.waw.pl");
-        weatherSourceCombo.getSelectionModel().selectFirst();
+        ComboBox<UpdateSource> weatherSourceCombo = new ComboBox<>();
+        weatherSourceCombo.getItems().addAll(UpdateSource.values());
+        weatherSourceCombo.getSelectionModel().select(application.getWeatherSource());
+        weatherSourceCombo.valueProperty().addListener(new ChangeListener<UpdateSource>() {
+            @Override
+            public void changed(ObservableValue<? extends UpdateSource> observableValue, UpdateSource oldValue, UpdateSource newValue) {
+                application.setWeatherSource(newValue);
+            }
+        });
         HBox sourceSwitchBox = new HBox(new Label("Data source"), weatherSourceCombo);
         sourceSwitchBox.setAlignment(Pos.CENTER);
         sourceSwitchBox.setSpacing(3);
 
         Button updateButton = new Button();
         updateButton.setText("Update");
-        HBox updateBox = new HBox(new Label("Update data"), updateButton);
-        updateBox.setAlignment(Pos.CENTER);
-        updateBox.setSpacing(3);
+        updateButton.setOnMouseClicked(e -> application.updateAll());
 
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(5.0);
         dropShadow.setOffsetX(3.0);
         dropShadow.setOffsetY(3.0);
         dropShadow.setColor(Color.color(0.4, 0.5, 0.5));
-        HBox menuBox = new HBox(sourceSwitchBox, updateBox);
+        HBox menuBox = new HBox(sourceSwitchBox, updateButton);
         menuBox.setSpacing(10);
         menuBox.setStyle("-fx-background-color: rgb(223,223,223)");
         menuBox.setPadding(new Insets(5));

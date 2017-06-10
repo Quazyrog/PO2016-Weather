@@ -85,4 +85,10 @@ public class UpdateFromOpenWeatherMap implements IWeatherUpdate {
             throw new RuntimeException("Unexpected JSON structure");
         }
     }
+
+
+    @Override
+    public String description() {
+        return "Weather";
+    }
 }
