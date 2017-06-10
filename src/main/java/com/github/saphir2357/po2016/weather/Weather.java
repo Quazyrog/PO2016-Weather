@@ -19,13 +19,6 @@ public class Weather extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        try {
-            weatherData.update(new UpdateFromOpenWeatherMap(), false);
-            weatherData.update(new UpdateFromGIOS(), false);
-            mainWindow.refresh();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         primaryStage.setScene(mainWindow.getScene());
         primaryStage.setTitle("Weather (Warsaw/Poland)");
         primaryStage.show();
