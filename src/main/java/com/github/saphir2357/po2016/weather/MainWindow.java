@@ -1,4 +1,4 @@
-package com.github.saphir2357.po2016.weather.ui;
+package com.github.saphir2357.po2016.weather;
 
 import com.github.saphir2357.po2016.weather.data.NoDataException;
 import com.github.saphir2357.po2016.weather.data.WeatherData;
@@ -58,10 +58,7 @@ public class MainWindow {
         ColumnConstraints cc = new ColumnConstraints();
         cc.setHalignment(HPos.CENTER);
         cc.setPercentWidth(33);
-        RowConstraints rc = new RowConstraints();
-        rc.setValignment(VPos.TOP);
         mainPane.getColumnConstraints().addAll(cc, cc, cc);
-        mainPane.getRowConstraints().addAll(rc, rc, rc);
 
         addLocationLabel(0);
         addTemperatureAndImage(1);

@@ -3,7 +3,6 @@ package com.github.saphir2357.po2016.weather;
 import com.github.saphir2357.po2016.weather.data.UpdateFromGIOS;
 import com.github.saphir2357.po2016.weather.data.UpdateFromOpenWeatherMap;
 import com.github.saphir2357.po2016.weather.data.WeatherData;
-import com.github.saphir2357.po2016.weather.ui.MainWindow;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
