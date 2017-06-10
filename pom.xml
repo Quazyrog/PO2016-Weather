@@ -6,7 +6,7 @@
 
     <groupId>com.github.saphir2357.po2016.weather</groupId>
     <artifactId>Weather</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <build>
