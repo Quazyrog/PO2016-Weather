@@ -1,6 +1,9 @@
 package com.github.saphir2357.po2016.weather.data;
 
+import java.util.regex.Matcher;
+
 public class WeatherData {
+    private int precisionPower = 10;
     private int weatherCode;
     private double kelvinTemperatureMin;
     private double kelvinTemperatureMax;
@@ -15,8 +18,13 @@ public class WeatherData {
     private double rain;
 
 
-    protected static double kelvinToCelcius(double kelvin){
+    public static double kelvinToCelcius(double kelvin){
         return kelvin - 273.15;
+    }
+
+
+    public static double celciusToKelvin(double kelvin){
+        return kelvin + 273.15;
     }
 
 
@@ -28,61 +36,61 @@ public class WeatherData {
     public double pm25() throws NoDataException {
         if (pm25 < 0)
             throw new NoDataException("PM2.5");
-        return pm25;
+        return round(pm25);
     }
 
 
     public double pm10() throws NoDataException {
         if (pm10 < 0)
             throw new NoDataException("PM10");
-        return pm10;
+        return round(pm10);
     }
 
 
     public double celciusMin() throws NoDataException {
         if (kelvinTemperatureMin < 0)
             throw new NoDataException("calcius minimal temperature");
-        return kelvinToCelcius(kelvinTemperatureMin);
+        return round(kelvinToCelcius(kelvinTemperatureMin));
     }
 
 
     public double celciusMax() throws NoDataException {
         if (kelvinTemperatureMin < 0)
             throw new NoDataException("calcius maximal temperature");
-        return kelvinToCelcius(kelvinTemperatureMax);
+        return round(kelvinToCelcius(kelvinTemperatureMax));
     }
 
 
     public double celcius() throws NoDataException {
-        return (celciusMin() + celciusMax()) / 2.0;
+        return round((celciusMin() + celciusMax()) / 2.0);
     }
 
 
     public double hPaPressure() throws NoDataException {
         if (hPaPressure < 0)
             throw new NoDataException("pressure");
-        return hPaPressure;
+        return round(hPaPressure);
     }
 
 
     public double humidityPercent() throws NoDataException {
         if (humidity < 0)
             throw new NoDataException("humidity percent");
-        return humidity;
+        return round(humidity);
     }
 
 
     public double windSpeedKmh() throws NoDataException {
         if (windSpeed < 0)
             throw new NoDataException("wind speed");
-        return windSpeed * 3.6;
+        return round(windSpeed * 3.6);
     }
 
 
     public double windDirectionDegree() throws NoDataException {
         if (windDegree < 0)
             throw new NoDataException("wind direction degree");
-        return windDegree;
+        return round(windDegree);
     }
 
 
@@ -96,14 +104,14 @@ public class WeatherData {
     public double rainVolume3h() throws NoDataException {
         if (rain < 0)
             throw new NoDataException("rain volume in 3h");
-        return rain;
+        return round(rain);
     }
 
 
     public double cloudinessPercent() throws  NoDataException {
         if (clouds < 0)
             throw new NoDataException("cloudiness percent");
-        return clouds;
+        return round(clouds);
     }
 
 
@@ -160,5 +168,22 @@ public class WeatherData {
         } else if (update.hasData(WeatherUpdateDataKey.TEMPERATURE)) {
             kelvinTemperatureMin = kelvinTemperatureMax = update.get(WeatherUpdateDataKey.TEMPERATURE);
         }
+    }
+
+
+    public int precision() {
+        return (int)Math.round(Math.log10(precisionPower));
+    }
+
+
+    public void setPrecision(int precision) {
+        if (precision < 0)
+            throw new IllegalArgumentException("negative precision is invalid precision");
+        precisionPower = (int)Math.pow(10, precision);
+    }
+
+
+    private double round(double val) {
+        return (double)Math.round(val * precisionPower) / (double)precisionPower;
     }
 }
