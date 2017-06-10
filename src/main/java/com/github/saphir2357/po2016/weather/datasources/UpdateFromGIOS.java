@@ -15,16 +15,10 @@ import java.util.logging.Logger;
 
 public class UpdateFromGIOS implements IWeatherUpdate {
     private static final String ALL_DATA_ENDPOINT = "http://powietrze.gios.gov.pl/pjp/current/getAQIDetailsList?param=AQI";
-    private static final int DEFAULT_STATION_ID = 530;
 
 
     private JSONObject stationData = null;
-
-
-    public UpdateFromGIOS() throws IOException {
-        this(DEFAULT_STATION_ID);
-    }
-
+    
 
     public UpdateFromGIOS(int stationId) throws IOException {
         Logger.getGlobal().info("Downloading update from GIOS station " + stationId);
