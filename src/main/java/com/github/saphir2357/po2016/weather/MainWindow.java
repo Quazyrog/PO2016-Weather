@@ -1,5 +1,6 @@
 package com.github.saphir2357.po2016.weather;
 
+import com.github.saphir2357.po2016.weather.datasources.GIOSStation;
 import com.github.saphir2357.po2016.weather.datasources.NoDataException;
 import com.github.saphir2357.po2016.weather.datasources.WeatherData;
 import javafx.beans.value.ChangeListener;
@@ -16,6 +17,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Logger;
 
 
 public class MainWindow {
@@ -145,20 +150,6 @@ public class MainWindow {
 
 
     private void addMenuBar(BorderPane layout) {
-        ToggleGroup sourceToggleGroup = new ToggleGroup();
-        ComboBox<UpdateSource> weatherSourceCombo = new ComboBox<>();
-        weatherSourceCombo.getItems().addAll(UpdateSource.values());
-        weatherSourceCombo.getSelectionModel().select(application.getConfig().getUpdateSource());
-        weatherSourceCombo.valueProperty().addListener(new ChangeListener<UpdateSource>() {
-            @Override
-            public void changed(ObservableValue<? extends UpdateSource> observableValue, UpdateSource oldValue, UpdateSource newValue) {
-                application.getConfig().setUpdateSource(newValue);
-            }
-        });
-        HBox sourceSwitchBox = new HBox(new Label("Data source"), weatherSourceCombo);
-        sourceSwitchBox.setAlignment(Pos.CENTER);
-        sourceSwitchBox.setSpacing(3);
-
         Button updateButton = new Button();
         updateButton.setText("Update");
         updateButton.setOnMouseClicked(e -> application.updateAll());
@@ -168,12 +159,58 @@ public class MainWindow {
         dropShadow.setOffsetX(3.0);
         dropShadow.setOffsetY(3.0);
         dropShadow.setColor(Color.color(0.4, 0.5, 0.5));
-        HBox menuBox = new HBox(sourceSwitchBox, updateButton);
+
+        HBox menuBox = new HBox(buildSourceSwitch(), buildGIOSStationSwitch(), updateButton);
         menuBox.setSpacing(10);
         menuBox.setStyle("-fx-background-color: rgb(223,223,223)");
         menuBox.setPadding(new Insets(5));
         menuBox.setEffect(dropShadow);
         layout.setTop(menuBox);
+    }
+
+
+    private Node buildSourceSwitch() {
+        ComboBox<UpdateSource> weatherSourceCombo = new ComboBox<>();
+        weatherSourceCombo.setTooltip(new Tooltip("Change weather data provider"));
+
+        weatherSourceCombo.getItems().addAll(UpdateSource.values());
+        weatherSourceCombo.getSelectionModel().select(application.getConfig().getUpdateSource());
+        weatherSourceCombo.valueProperty().addListener(new ChangeListener<UpdateSource>() {
+            @Override
+            public void changed(ObservableValue<? extends UpdateSource> observableValue, UpdateSource oldValue, UpdateSource newValue) {
+                application.getConfig().setUpdateSource(newValue);
+            }
+        });
+
+        return weatherSourceCombo;
+    }
+
+
+    private Node buildGIOSStationSwitch() {
+        ComboBox<GIOSStation> weatherSourceCombo = new ComboBox<>();
+        weatherSourceCombo.setTooltip(new Tooltip("Change GIOS station"));
+        List<GIOSStation> list;
+
+        try {
+            list = GIOSStation.stationsInCity("Warszawa");
+            weatherSourceCombo.getItems().addAll(list);
+            GIOSStation selectedStation = list.stream()
+                    .filter(s -> s.getId() == application.getConfig().getGiosStationID())
+                    .findFirst().get();
+            weatherSourceCombo.getSelectionModel().select(selectedStation);
+        } catch (IOException | NullPointerException e) {
+            Logger.getGlobal().warning("Cannot fill stations list");
+            return weatherSourceCombo;
+        }
+
+        weatherSourceCombo.valueProperty().addListener(new ChangeListener<GIOSStation>() {
+            @Override
+            public void changed(ObservableValue<? extends GIOSStation> observableValue, GIOSStation giosStation, GIOSStation t1) {
+                application.getConfig().setGiosStationID(t1.getId());
+            }
+        });
+
+        return weatherSourceCombo;
     }
 
 

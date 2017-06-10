@@ -77,6 +77,8 @@ public class Weather extends Application {
     void updateAll() {
         Logger.getGlobal().info("Updating all data");
         successfulSubUpdates = 0;
+        weatherData.clearValues();
+        mainWindow.setStatusText("Updating...");
         executor.execute(new WeatherUpdateTask(this));
         executor.execute(new AirUpdateTask(this));
     }
