@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 public class Config {
     private UpdateSource updateSource = UpdateSource.OPEN_WEATHER_MAP;
-    private int giosStationID = 530;
+    private int giosStationID = 550;
     private int updateInterval = 1800;
     private String owmAPIKey = "f8b5d124cf7d13e0697128c5aedac55c";
     private boolean owmUseSample = false;
